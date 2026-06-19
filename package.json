@@ -1,0 +1,8 @@
+{
+  "name": "pi-dashboard",
+  "private": true,
+  "workspaces": [
+    "pc-agent",
+    "pi-client"
+  ]
+}
