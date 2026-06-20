@@ -4,11 +4,45 @@
       <RouterView />
     </div>
     <TabBar />
+    <TouchKeyboard :visible="kbVisible" @done="hideKeyboard" />
   </div>
 </template>
 
 <script setup>
-import TabBar from './components/TabBar.vue'
+import { ref, onMounted, onUnmounted } from 'vue'
+import TabBar        from './components/TabBar.vue'
+import TouchKeyboard from './components/TouchKeyboard.vue'
+
+const kbVisible = ref(false)
+
+function onFocusIn(e) {
+  if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') {
+    kbVisible.value = true
+  }
+}
+
+function onFocusOut() {
+  setTimeout(() => {
+    const a = document.activeElement
+    if (!a || !['INPUT', 'TEXTAREA'].includes(a.tagName)) {
+      kbVisible.value = false
+    }
+  }, 80)
+}
+
+function hideKeyboard() {
+  kbVisible.value = false
+  document.activeElement?.blur()
+}
+
+onMounted(() => {
+  window.addEventListener('focusin', onFocusIn)
+  window.addEventListener('focusout', onFocusOut)
+})
+onUnmounted(() => {
+  window.removeEventListener('focusin', onFocusIn)
+  window.removeEventListener('focusout', onFocusOut)
+})
 </script>
 
 <style>
